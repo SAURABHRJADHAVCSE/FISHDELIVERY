@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.FISHDELIVERY" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.FISHDELIVERY" parent="Base.Theme.FISHDELIVERY" />
+
+    <style name="authBtn">
+        <item name="android:backgroundTint">#FF6200EE</item>
+    </style>
+
+    <style name="loginBtn">
+        <item name="android:backgroundTint">#222831</item>
+    </style>
+
+    <style name="customerDashBtn">
+        <item name="android:backgroundTint">#222831</item>
+    </style>
+
+    <style name="customerDashBtn2">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="strokeColor">@color/black</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+
+</resources>

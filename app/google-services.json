@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "659944673123",
+    "project_id": "fish-delivery-16d43",
+    "storage_bucket": "fish-delivery-16d43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659944673123:android:28cdcb6492eedb18fc0d56",
+        "android_client_info": {
+          "package_name": "com.example.fishdelivery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXvBs8VV3gGnOxWSEV4ILZ6ioqBmv6YAc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
