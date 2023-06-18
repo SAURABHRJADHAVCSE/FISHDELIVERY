@@ -28,7 +28,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.fishdelivery.Customer.Notification.FCMSend;
 import com.example.fishdelivery.Customer.TrackOrder.TrackOrder;
+import com.example.fishdelivery.MainActivity;
 import com.example.fishdelivery.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -43,6 +45,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -73,7 +76,6 @@ public class GetAddress extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
 
-    private DatabaseReference databaseReferenceText;
 
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
@@ -244,8 +246,41 @@ public class GetAddress extends AppCompatActivity {
                 startActivity(new Intent(GetAddress.this, TrackOrder.class));
 
 
+                // Notification
+
+                String title = "Order Recived";
+                String message = "New Order";
+
+                FCMSend.pushNotification(
+                        GetAddress.this,
+                        "e6pEmUZ0R_itT1eh7I1ylF:APA91bEBtYcB_2I67X9M-CIs4ZcqkTeUG123dKqb1QjUc_o2qz459W-HsnPKrV6Wt7XW6HD3QmTw8rrb-rH45GxNzzp9X1nRe86jwPAUuFsJGgJRljtdUKJh5QXP1nKjR3psIgMNZ7OS",
+                        title,
+                        message
+                );
             }
         });
+
+
+
+        // Notification
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()) {
+                    String token = task.getResult();
+                    if (token != null) {
+                        Log.d("FCMToken", "Token" + token); // Log the FCM token
+                    } else {
+                        Toast.makeText(GetAddress.this, "Failed to get FCM token", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(GetAddress.this, "Failed to get FCM token", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
     }
 
 
@@ -334,9 +369,7 @@ public class GetAddress extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        // Text uploaded successfully, send notification to the Admin
-                        playNotificationSound();
-                        generateNotification();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -346,49 +379,4 @@ public class GetAddress extends AppCompatActivity {
                     }
                 });
     }
-    private void playNotificationSound() {
-        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-            mediaPlayer.start();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    }
-
-    private void generateNotification() {
-        // Create an explicit intent for the TrackOrder activity
-        Intent intent = new Intent(this, TrackOrder.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-
-        // Create a notification builder
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "channel_id")
-                .setContentTitle("Data Uploaded")
-                .setContentText("Your data has been uploaded to Firebase.")
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
-
-        // Get the NotificationManager system service
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Check if notification channels are supported (required for Android Oreo and above)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String channelId = "channel_id";
-            String channelName = "Channel Name";
-            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-            builder.setChannelId(channelId);
-        }
-
-        // Show the notification
-        notificationManager.notify(0, builder.build());
-    }
-
-
 }
