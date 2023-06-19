@@ -19,12 +19,18 @@ import com.example.fishdelivery.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class AdminDashboard extends AppCompatActivity {
 
     LinearLayout addItem, seeOrders;
     Button addTodo, addQuotes;
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference tokensRef = database.getReference("tokens");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,26 @@ public class AdminDashboard extends AppCompatActivity {
                     } else {
                         Toast.makeText(AdminDashboard.this, "Failed to get FCM token", Toast.LENGTH_SHORT).show();
                     }
+
+                    token = task.getResult();
+
+                    if (token != null) {
+                        tokensRef.child("AdminToken").setValue(token)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d("FCMToken", "Token stored in the database");
+                                        } else {
+                                            Toast.makeText(AdminDashboard.this, "Failed to store FCM token", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(AdminDashboard.this, "Failed to get FCM token", Toast.LENGTH_SHORT).show();
+                    }
+
+
                 } else {
                     Toast.makeText(AdminDashboard.this, "Failed to get FCM token", Toast.LENGTH_SHORT).show();
                 }

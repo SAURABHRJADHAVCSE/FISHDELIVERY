@@ -5,12 +5,8 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,8 +15,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +24,6 @@ import android.widget.Toast;
 
 import com.example.fishdelivery.Customer.Notification.FCMSend;
 import com.example.fishdelivery.Customer.TrackOrder.TrackOrder;
-import com.example.fishdelivery.MainActivity;
 import com.example.fishdelivery.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,8 +32,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -49,23 +45,11 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class GetAddress extends AppCompatActivity {
 
@@ -86,9 +70,14 @@ public class GetAddress extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference("UserOrders");
 
+    DatabaseReference tokensRef = firebaseDatabase.getReference("tokens");
+
     String getLatitude, getLongitude;
 
-    private MediaPlayer mediaPlayer;
+
+    private String retrieveToken;
+
+    String USERID = FirebaseAuth.getInstance().getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +104,6 @@ public class GetAddress extends AppCompatActivity {
         userId = firebaseAuth.getCurrentUser().getUid();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.notisound);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String currentDate = dateFormat.format(new Date());
@@ -174,6 +162,23 @@ public class GetAddress extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE); // Show the progress bar
                     getLocationAddress();
                 }
+            }
+        });
+
+        tokensRef.child("AdminToken").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String token = dataSnapshot.getValue(String.class);
+                    retrieveToken = token;
+                } else {
+                    Toast.makeText(GetAddress.this, "Error Token", Toast.LENGTH_SHORT).show();;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle the error case
             }
         });
 
@@ -253,7 +258,7 @@ public class GetAddress extends AppCompatActivity {
 
                 FCMSend.pushNotification(
                         GetAddress.this,
-                        "e6pEmUZ0R_itT1eh7I1ylF:APA91bEBtYcB_2I67X9M-CIs4ZcqkTeUG123dKqb1QjUc_o2qz459W-HsnPKrV6Wt7XW6HD3QmTw8rrb-rH45GxNzzp9X1nRe86jwPAUuFsJGgJRljtdUKJh5QXP1nKjR3psIgMNZ7OS",
+                        retrieveToken,
                         title,
                         message
                 );
