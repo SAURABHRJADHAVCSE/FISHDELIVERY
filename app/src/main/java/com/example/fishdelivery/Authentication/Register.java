@@ -83,13 +83,9 @@ public class Register extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String enteredPasscode = adminPasscode.getText().toString();
-                if (enteredPasscode.equals(correctPasscode)) {
-                    // Enable the checkbox
-                    isAdmin.setEnabled(true);
-                } else {
-                    // Disable the checkbox
-                    isAdmin.setEnabled(false);
-                }
+                // Enable the checkbox
+                // Disable the checkbox
+                isAdmin.setEnabled(enteredPasscode.equals(correctPasscode));
             }
         });
 
@@ -122,7 +118,7 @@ public class Register extends AppCompatActivity {
 
                             FirebaseUser user = fAuth.getCurrentUser();
                             boolean res = (verify_EmailId());
-                            if (res == true) {
+                            if (res) {
                                 Toast.makeText(Register.this, "Enter Details Correctly", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(Register.this, "Account Created", Toast.LENGTH_SHORT).show();
@@ -145,7 +141,7 @@ public class Register extends AppCompatActivity {
 
                             if (isCustomer.isChecked()) {
                                 res = (verify_EmailId());
-                                if (res == true)
+                                if (res)
                                     return;
                                 userInfo.put("isCustomer", "1");
                             }

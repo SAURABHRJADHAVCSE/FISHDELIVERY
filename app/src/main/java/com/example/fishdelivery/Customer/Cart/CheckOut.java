@@ -28,12 +28,17 @@ public class CheckOut extends AppCompatActivity {
 
     TextInputEditText rsTxt;
 
+    private Button incrementButton;
+    private Button decrementButton;
+    private double quantity = 0;
+    private double incrementValue = 500;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_out);
 
-        inputEditText = findViewById(R.id.EnterInKg);
+        inputEditText = findViewById(R.id.EnterInGr);
         getRs = findViewById(R.id.resultTextView);
         rsTxt = findViewById(R.id.rsText);
 
@@ -42,6 +47,28 @@ public class CheckOut extends AppCompatActivity {
         foodTitle = findViewById(R.id.FoodNameMyOrders);
         foodPrice = findViewById(R.id.FoodPriceMyOrders);
         imageView = findViewById(R.id.FoodImageMyOrders);
+
+        incrementButton = findViewById(R.id.incrementButton);
+        decrementButton = findViewById(R.id.decrementButton);
+
+
+        incrementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                quantity += incrementValue;
+                updateQuantity();
+            }
+        });
+
+        decrementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (quantity >= incrementValue) {
+                    quantity -= incrementValue;
+                    updateQuantity();
+                }
+            }
+        });
 
         // Retrieve the passed data from the Intent
         Intent intent = getIntent();
@@ -94,15 +121,19 @@ public class CheckOut extends AppCompatActivity {
 
     }
 
+    private void updateQuantity() {
+        inputEditText.getEditText().setText(String.valueOf(quantity));
+    }
+
     private void calculateResult() {
         String inputText = inputEditText.getEditText().getText().toString();
 
         if (inputText.isEmpty()) {
-            getRs.getEditText().setText("Enter In Kg");
+            getRs.getEditText().setText("Enter In Grams");
             return;
         }
 
-        double inputKg = Double.parseDouble(inputText);
+        double inputKg = Double.parseDouble(inputText) / 1000;
         double foodPriceValue = Double.parseDouble(foodPrice.getText().toString());
         double result = inputKg * foodPriceValue;
 

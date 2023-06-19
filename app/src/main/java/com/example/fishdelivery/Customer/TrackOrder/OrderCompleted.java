@@ -6,13 +6,11 @@ import android.os.Bundle;
 
 import com.example.fishdelivery.R;
 
-public class TrackOrder extends AppCompatActivity {
+public class OrderCompleted extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_track_order);
-
-
+        setContentView(R.layout.activity_order_completed);
     }
 }

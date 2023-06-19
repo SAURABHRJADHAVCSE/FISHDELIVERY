@@ -21,7 +21,7 @@ import java.util.List;
 
 public class TotalOrdersAdapter extends RecyclerView.Adapter<TotalOrdersAdapter.OrderViewHolder> {
 
-    private List<UserOrders> orderList;
+    private final List<UserOrders> orderList;
 
     public TotalOrdersAdapter(List<UserOrders> orderList) {
         this.orderList = orderList;
@@ -62,8 +62,6 @@ public class TotalOrdersAdapter extends RecyclerView.Adapter<TotalOrdersAdapter.
                     intent.putExtra("latitude", clickedOrder.getLatitude());
                     intent.putExtra("longitude", clickedOrder.getLongitude());
 
-
-
                     view.getContext().startActivity(intent);
 
                 }
@@ -77,11 +75,11 @@ public class TotalOrdersAdapter extends RecyclerView.Adapter<TotalOrdersAdapter.
     }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        private TextView orderDate;
-        private TextView orderTime;
-        private ImageView orderImageHolder;
+        private final TextView orderDate;
+        private final TextView orderTime;
+        private final ImageView orderImageHolder;
 
-        private Button seeDetails;
+        private final Button seeDetails;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);

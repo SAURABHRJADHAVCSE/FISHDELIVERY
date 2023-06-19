@@ -61,7 +61,7 @@ public class FishAdapter extends RecyclerView.Adapter<FishAdapter.MyViewHolder> 
             @Override
             public void onClick(View v) {
 
-                String key = FirebaseDatabase.getInstance().getReference("MyOrders").push().getKey().toString();
+                String key = FirebaseDatabase.getInstance().getReference("MyOrders").push().getKey();
 
                 Log.d(TAG, "FishImageUrl: " + key);
 

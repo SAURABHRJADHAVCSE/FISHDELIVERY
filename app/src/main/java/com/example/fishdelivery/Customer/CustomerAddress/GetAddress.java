@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.fishdelivery.Customer.Notification.FCMSend;
+import com.example.fishdelivery.Customer.TrackOrder.OrderCompleted;
 import com.example.fishdelivery.Customer.TrackOrder.TrackOrder;
 import com.example.fishdelivery.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -172,7 +173,7 @@ public class GetAddress extends AppCompatActivity {
                     String token = dataSnapshot.getValue(String.class);
                     retrieveToken = token;
                 } else {
-                    Toast.makeText(GetAddress.this, "Error Token", Toast.LENGTH_SHORT).show();;
+                    Toast.makeText(GetAddress.this, "Error Token", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -208,7 +209,7 @@ public class GetAddress extends AppCompatActivity {
                 uploadTextToFirebase(tempPrice);
 
 
-                String orderId = FirebaseDatabase.getInstance().getReference("UserOrders").push().getKey().toString();
+                String orderId = FirebaseDatabase.getInstance().getReference("UserOrders").push().getKey();
 
                 // Set the value under the new order ID
                 databaseReference.child(userId).child(orderId).setValue(user)
@@ -248,7 +249,7 @@ public class GetAddress extends AppCompatActivity {
                 });
 
 
-                startActivity(new Intent(GetAddress.this, TrackOrder.class));
+                startActivity(new Intent(GetAddress.this, OrderCompleted.class));
 
 
                 // Notification
@@ -289,7 +290,7 @@ public class GetAddress extends AppCompatActivity {
     }
 
 
-    private LocationListener locationListener = new LocationListener() {
+    private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {

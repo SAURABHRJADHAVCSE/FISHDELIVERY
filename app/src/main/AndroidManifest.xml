@@ -19,6 +19,9 @@
         android:theme="@style/Theme.FISHDELIVERY"
         tools:targetApi="31">
         <activity
+            android:name=".Customer.TrackOrder.OrderCompleted"
+            android:exported="false" />
+        <activity
             android:name=".Admin.Orders.AdminTrackUser"
             android:exported="false" />
         <activity
@@ -96,6 +99,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
+
 </manifest>

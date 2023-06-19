@@ -23,7 +23,7 @@ public class SeeOrders extends AppCompatActivity {
 
     Button track;
 
-    String getLatitude, getLongitude;
+    String getLatitude, getLongitude, getAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,7 @@ public class SeeOrders extends AppCompatActivity {
 
             getLatitude = latitude;
             getLongitude = longitude;
+            getAddress = address;
 
             Picasso.get().load(image).into(imageView);
         }
@@ -83,6 +84,7 @@ public class SeeOrders extends AppCompatActivity {
                 Intent intent = new Intent(SeeOrders.this, AdminTrackUser.class);
                 intent.putExtra("latitude", getLatitude); // Set the latitude of the address
                 intent.putExtra("longitude", getLongitude); // Set the longitude of the address
+                intent.putExtra("address", getAddress); // Set the longitude of the address
                 startActivity(intent);
             }
         });
